@@ -3,7 +3,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon src/index.ts",
     "build": "tsc",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "type": "module"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
