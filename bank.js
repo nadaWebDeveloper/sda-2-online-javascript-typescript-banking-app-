@@ -2,18 +2,21 @@
 class Transaction {
   constructor(amount) {
     if (amount <= 0) {
-        console.error(`Transaction can not have negative amount or Zero [ ${amount} ]`);
-    }else{    
-    try {
-      this.amount = amount;
-      this.date = new Date();
-    } catch (error) {
-      console.error(error);
-    }}
+      console.error(
+        `Transaction can not have negative amount or Zero [ ${amount} ]`
+      );
+    } else {
+      try {
+        this.amount = amount;
+        this.date = new Date();
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 }
 
-// 1- CLASS CUSTOMER
+// 2- CLASS CUSTOMER
 class Customer {
   constructor(name, id) {
     this.name = name;
@@ -33,28 +36,80 @@ class Customer {
     return this.Transaction;
   }
 
-  getBalance(){
-    let balance = this.Transaction.reduce((total,transaction)=> total + transaction.amount,0);
-    return `Total of Balance is: ${balance}`
+  getBalance() {
+    let balance = this.Transaction.reduce(
+      (total, transaction) => total + transaction.amount,
+      0
+    );
+    return `Total of Balance is: ${balance}`;
   }
 
-  addTransaction(amount){
-      const transaction = new Transaction(amount);
-      const result = amount <= 0 ? false :this.Transaction.push(transaction);
-      const transactionString = JSON.stringify(this.Transaction);
-      const isDone = result ? `\nThe transaction is successful for this amount[ ${amount} ]\n${transactionString}\n`:`\nThe transaction is Failed for this amount[ ${amount} ]\n`;
-      return isDone;
+  addTransaction(amount) {
+    const transaction = new Transaction(amount);
+    const result = amount <= 0 ? false : this.Transaction.push(transaction);
+    const transactionString = JSON.stringify(this.Transaction);
+    const isDone = result
+      ? `\nThe transaction is successful for this amount[ ${amount} ]\n${transactionString}\n`
+      : `\nThe transaction is Failed for this amount[ ${amount} ]\n`;
+    return isDone;
+  }
+}
+
+// 3- CLASS BRANCH
+class Branch {
+  constructor(nameB) {
+    this.nameB = nameB;
+    this.Customers = [];
+  }
+
+  getBranchName(){
+    return this.nameB;
+  }
+
+  getCustomers(){
+    return this.Customers;
+  }
+
+  addCustomer(customer){
+    const existingCustomer = this.Customers.includes(customer);
+    console.log(existingCustomer);
+    if (!existingCustomer) {
+        this.Customers.push(customer);
+      return this.Customers;
+    } else {
+      return `customer already exists`;
+    }
+
+
+  }
+
+  addCustomerTransaction(customerId, amount){
+     const customer = this.Customers.find((customer) => customer.id === customerId);
+     customer? customer.addTransaction(amount): false;
+
   }
 }
 
 
-const c2 = new Customer('nada', '11283');
-c2.addTransaction(8970);
-const jj=c2.addTransaction(0);
-const gg=c2.addTransaction(960);
-const hhh=c2.addTransaction(-675);
-const ll =c2.getBalance();
-console.log(ll);
-console.log(gg);
-console.log(hhh);
-console.log(jj);
+// const arizonaBank = new Bank("Arizona")
+const customer1 = new Customer("980", '980')
+const customer2 = new Customer("Anna", 2)
+
+const westBranch = new Branch("West Branch")
+const sunBranch = new Branch("Sun Branch")
+console.log(westBranch.addCustomer('980'));
+
+// const customer2 = new Customer("Anna", 2)
+// const customer3 = new Customer("John", 3)
+
+// arizonaBank.addBranch(westBranch)
+// arizonaBank.addBranch(sunBranch)
+// arizonaBank.addBranch(westBranch) 
+
+// arizonaBank.findBranchByName("bank")
+// arizonaBank.findBranchByName("sun")
+
+// arizonaBank.addCustomer(westBranch, customer1)
+// arizonaBank.addCustomer(westBranch, customer3)
+// arizonaBank.addCustomer(sunBranch, customer1)
+// arizonaBank.addCustomer(sunBranch, customer2)
