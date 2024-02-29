@@ -1,8 +1,8 @@
 // 1- CLASS TRANSACTION
 class Transaction {
   constructor(amount) {
-    if (amount < 0) {
-        console.error(`Transaction can not have negative amount ${amount}`);
+    if (amount <= 0) {
+        console.error(`Transaction can not have negative amount or Zero [ ${amount} ]`);
     }else{    
     try {
       this.amount = amount;
@@ -40,7 +40,7 @@ class Customer {
 
   addTransaction(amount){
       const transaction = new Transaction(amount);
-      const result = amount < 0 ? false :this.Transaction.push(transaction);
+      const result = amount <= 0 ? false :this.Transaction.push(transaction);
       const transactionString = JSON.stringify(this.Transaction);
       const isDone = result ? `\nThe transaction is successful for this amount[ ${amount} ]\n${transactionString}\n`:`\nThe transaction is Failed for this amount[ ${amount} ]\n`;
       return isDone;
@@ -50,9 +50,11 @@ class Customer {
 
 const c2 = new Customer('nada', '11283');
 c2.addTransaction(8970);
+const jj=c2.addTransaction(0);
 const gg=c2.addTransaction(960);
 const hhh=c2.addTransaction(-675);
 const ll =c2.getBalance();
 console.log(ll);
 console.log(gg);
 console.log(hhh);
+console.log(jj);
