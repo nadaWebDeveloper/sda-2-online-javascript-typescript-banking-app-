@@ -99,7 +99,7 @@ class Branch implements IBranch {
     IndexCustomer === -1
       ? `Customer with id ${customerId} not found in ${this.nameBranch}`
       : this.getCustomers()[IndexCustomer].addTransaction(amount);
-      return true;
+    return true;
   }
 }
 
@@ -145,7 +145,11 @@ class Bank implements IBank {
     }
   }
 
-  addCustomerTransaction(branch: Branch, customerId: number, amount: number) {
+  addCustomerTransaction(
+    branch: Branch,
+    customerId: number,
+    amount: number
+  ): string | undefined {
     //  const targetBranch = this.findBranchByName(branch.getBranchName());
     const targetBranch = this.checkBranch(branch);
     if (targetBranch) {
@@ -194,6 +198,22 @@ class Bank implements IBank {
       }
     } else {
       console.error(`The ${branch.getBranchName()}is not found`);
+    }
+  }
+
+  searchCustomer(branch: Branch, searchCustomer: string): void {
+    if (this.checkBranch(branch)) {
+      let customers = branch.getCustomers();
+      let result = customers.filter((customer) => {
+        customer
+          .getName()
+          .toLowerCase()
+          .includes(searchCustomer.toLowerCase()) ||
+          customer.getId().toString().includes(searchCustomer);
+      });
+      result.length > 0 ? result : "No customer found";
+    } else {
+      console.log(`${branch.getBranchName()} not found`);
     }
   }
 }
