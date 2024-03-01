@@ -37,4 +37,5 @@ export interface IBank {
   ): boolean;
   findBranchByName(branchName: string): Branch | undefined;
   checkBranch(branch: Branch): boolean;
+  listCustomers(branch: Branch, includeTransactions: boolean): void;
 }

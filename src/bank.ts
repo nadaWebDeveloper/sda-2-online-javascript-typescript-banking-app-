@@ -136,9 +136,31 @@ class Bank implements IBank{
     return this.Branches.includes(branch)
   }
 
-  // listCustomers(branch, includeTransactions){
-
-  // }
+  listCustomers(branch: Branch, includeTransactions: boolean): void {
+    console.log(`_____${this.nameBank} bank ${branch.getBranchName()} list_____`);
+    if (this.checkBranch(branch)) {
+      console.log(branch.getBranchName());
+      let customers = branch.getCustomers();
+      for (let customer of customers) {
+        console.log("customer: Id | name");
+        console.log(`         ${customer.getId()}   ${customer.getName()}`);
+  
+        let transactions = customer.getTransactions();
+  
+        if (includeTransactions) {
+          console.log(`transiactions:`);
+          for (let transaction of transactions) {
+            console.log(
+              `amount:${transaction["amount"]} date:${transaction["date"]}`
+            );
+          }
+          console.log("____________");
+        }
+      }
+    } else {
+      console.error(`The ${branch.getBranchName()}is not found`);
+    }
+  }
 }
 
 export  {Transaction,Customer,Branch, Bank};
