@@ -1,4 +1,6 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Bank = exports.Branch = exports.Customer = exports.Transaction = void 0;
 // 1- CLASS TRANSACTION
 class Transaction {
     constructor(amount) {
@@ -9,6 +11,7 @@ class Transaction {
         this.date = new Date();
     }
 }
+exports.Transaction = Transaction;
 // 2- CLASS CUSTOMER
 class Customer {
     constructor(name, id) {
@@ -22,7 +25,7 @@ class Customer {
     getId() {
         return this.id;
     }
-    getTransaction() {
+    getTransactions() {
         return this.Transaction;
     }
     getBalance() {
@@ -39,6 +42,7 @@ class Customer {
         return isDone;
     }
 }
+exports.Customer = Customer;
 // 3- CLASS BRANCH
 class Branch {
     constructor(nameBranch) {
@@ -67,6 +71,7 @@ class Branch {
         customer ? customer.addTransaction(amount) : false;
     }
 }
+exports.Branch = Branch;
 // 4- CLASS BANK
 class Bank {
     constructor(nameBank) {
@@ -89,7 +94,9 @@ class Bank {
         const targetBranch = this.findBranchByName(branch.nameBranch);
         if (targetBranch) {
             targetBranch.addCustomerTransaction(customerId, amount);
+            return true;
         }
+        return false;
     }
     findBranchByName(branchName) {
         return this.Branches.find((branch) => branch.nameBranch === branchName);
@@ -98,6 +105,7 @@ class Bank {
         return this.Branches.includes(branch);
     }
 }
+exports.Bank = Bank;
 const arizonaBank = new Bank("Arizona");
 const westBranch = new Branch("West Branch");
 const sunBranch = new Branch("Sun Branch");

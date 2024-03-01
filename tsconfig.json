@@ -6,5 +6,5 @@
     "outDir": "./public",                                   /* Specify an output folder for all emitted files. */
     "strict": true,                                      /* Enable all strict type-checking options. */                               /* Skip type checking all .d.ts files. */
   },
-  "files": ["./src/bank.ts" , "./src/index.ts"]
+  "files": ["./src/bank.ts" , "./src/interface.ts"]
 }

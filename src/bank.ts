@@ -1,5 +1,7 @@
+import {ICustomer,IBranch,ITransaction,IBank} from './interface'
+
 // 1- CLASS TRANSACTION
-class Transaction {
+class Transaction implements ITransaction {
   amount:number;
   date:Date;
   constructor(amount:number) {
@@ -15,7 +17,7 @@ class Transaction {
 }
 
 // 2- CLASS CUSTOMER
-class Customer {
+class Customer implements ICustomer{
   name:string;
   id:number;
   Transaction: Transaction[];
@@ -33,7 +35,7 @@ class Customer {
     return this.id;
   }
 
-  getTransaction() {
+  getTransactions() {
     return this.Transaction;
   }
 
@@ -57,7 +59,7 @@ class Customer {
 }
 
 // 3- CLASS BRANCH
-class Branch {
+class Branch implements IBranch{
   nameBranch:string;
   Customers:Customer[];
   constructor(nameBranch:string) {
@@ -73,7 +75,7 @@ class Branch {
     return this.Customers;
   }
 
-  addCustomer(customer:Customer) {
+  addCustomer(customer:Customer): Customer[] | string {
     const existingCustomer = this.Customers.includes(customer);
     console.log(existingCustomer);
     if (!existingCustomer) {
@@ -84,7 +86,7 @@ class Branch {
     }
   }
 
-  addCustomerTransaction(customerId:number, amount:number) {
+  addCustomerTransaction(customerId:number, amount:number): void {
     const customer = this.Customers.find(
       (customer) => customer.id === customerId
     );
@@ -93,7 +95,7 @@ class Branch {
 }
 
 // 4- CLASS BANK
-class Bank {
+class Bank implements IBank{
   nameBank:string;
   Branches:Branch[];
   constructor(nameBank:string) {
@@ -101,33 +103,36 @@ class Bank {
     this.Branches = [];
   }
 
-  addBranch(branch:Branch){
+  addBranch(branch:Branch): boolean | undefined{
   if(!this.Branches.includes(branch)){
         const result = this.Branches.push(branch);
         return result> 0 ? true: false;
     }
   }
 
-  addCustomer(branch:Branch, customer:Customer){
+  addCustomer(branch:Branch, customer:Customer): boolean | undefined{
     if(this.Branches.includes(branch)){
         const result = branch.addCustomer(customer);
         return result ? true: false;
     }
   }
 
-  addCustomerTransaction(branch:Branch, customerId:number, amount:number){
+  addCustomerTransaction(branch:Branch, customerId:number, amount:number):boolean{
    const targetBranch = this.findBranchByName(branch.nameBranch);
    if(targetBranch){
     targetBranch.addCustomerTransaction(customerId,amount);
+    return true;
    }
+   return false;
+
 
   }
 
-  findBranchByName(branchName:string){
+  findBranchByName(branchName:string): Branch | undefined{
     return this.Branches.find((branch) => branch.nameBranch === branchName);
   }
 
-  checkBranch(branch:Branch){
+  checkBranch(branch:Branch): boolean{
     return this.Branches.includes(branch)
   }
 
@@ -135,6 +140,8 @@ class Bank {
 
   // }
 }
+
+export  {Transaction,Customer,Branch, Bank};
 
 
 
