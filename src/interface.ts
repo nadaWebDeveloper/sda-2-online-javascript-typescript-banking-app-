@@ -17,7 +17,7 @@ export interface IBranch {
   getBranchName(): string;
   getCustomers(): Customer[];
   addCustomer(customer: Customer): boolean;
-  addCustomerTransaction(customerId: number, amount: number): boolean;
+  // addCustomerTransaction(customerId: number, amount: number): string;
 }
 // - INTERFACE TRANSACTION
 export interface ITransaction {
@@ -28,10 +28,10 @@ export interface ITransaction {
 export interface IBank {
   nameBank: string;
   Branches: Branch[];
-  getName(): string;
+  getNameBank(): string;
   getBranches(): Branch[];
-  addBranch(branch: Branch): boolean | undefined;
-  addCustomer(branch: Branch, customer: Customer): boolean | undefined;
+  addBranch(branch: Branch): boolean ;
+  addCustomer(branch: Branch, customer: Customer): boolean ;
   addCustomerTransaction(
     branch: Branch,
     customerId: number,
