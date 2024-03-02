@@ -245,18 +245,21 @@ class Bank implements IBank {
     }
   }
 
-  searchCustomer(branch: Branch, searchCustomer: string): void {
-    console.log(this.checkBranch(branch));
+  searchCustomer(branch: Branch, searchCustomer: string ): void {
     if (this.checkBranch(branch)) {
       let customers = branch.getCustomers();
       let result = customers.filter((customer) => {
-        customer
+        return (  customer
           .getName()
           .toLowerCase()
           .includes(searchCustomer.toLowerCase()) ||
-          customer.getId().toString().includes(searchCustomer);
+          customer.getId().toString().includes(searchCustomer));
       });
+      console.log('Search Result: ');
       result.length > 0 ? console.log(result) : console.log(`No Customer Found such [${searchCustomer}] On Branch: [${branch.getBranchName()}]`);
+      console.log(
+        `------------------------------------------------------------------`
+      );
     } else {
       console.log(`${branch.getBranchName()} Not Found`);
     }
@@ -300,7 +303,7 @@ console.log(arizonaBank.addCustomerTransaction(westBranch, customer2.getId(), 30
 console.log(
   arizonaBank.addCustomerTransaction(westBranch, customer4.getId(), 4000)
 );
-console.log(arizonaBank.searchCustomer(westBranch,'Anna'));
+console.log(arizonaBank.searchCustomer(westBranch,'1'));
 
 console.log(arizonaBank);
 
