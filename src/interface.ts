@@ -2,10 +2,10 @@ import { Transaction, Customer, Branch } from "./bank";
 // - INTERFACE CUSTOMER
 export interface ICustomer {
   name: string;
-  id: number;
+  id: string;
   transaction: Transaction[];
   getName(): string;
-  getId(): number;
+  getId(): string;
   getTransactions(): Transaction[];
   getBalance(): string;
   addTransaction(amount: number): string;
@@ -34,7 +34,7 @@ export interface IBank {
   addCustomer(branch: Branch, customer: Customer): boolean ;
   addCustomerTransaction(
     branch: Branch,
-    customerId: number,
+    customerId: string,
     amount: number
   ): string | undefined;
   findBranchByName(branchName: string): Branch | string;

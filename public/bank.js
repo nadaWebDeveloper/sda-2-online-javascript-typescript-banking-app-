@@ -1,6 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bank = exports.Branch = exports.Customer = exports.Transaction = void 0;
+// 0- CLASS IDGENERATOR
+class IdGenerator {
+    constructor() {
+        this.usedIds = new Set();
+    }
+    generateUniqueId() {
+        let id;
+        do {
+            id = this.generateRandomId();
+        } while (this.usedIds.has(id));
+        this.usedIds.add(id);
+        return id;
+    }
+    generateRandomId() {
+        const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*';
+        const idLength = 10;
+        let randomId = '';
+        for (let i = 0; i < idLength; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            randomId += characters.charAt(randomIndex);
+        }
+        return randomId;
+    }
+}
 // 1- CLASS TRANSACTION
 class Transaction {
     constructor(amount) {
@@ -15,9 +39,11 @@ exports.Transaction = Transaction;
 // 2- CLASS CUSTOMER
 class Customer {
     constructor(name, id) {
+        const idGenerator = new IdGenerator();
         this.name = name;
         this.id = id;
-        this.Transaction = [];
+        this.numberUser = idGenerator.generateUniqueId();
+        this.transaction = [];
     }
     getName() {
         return this.name;
@@ -26,7 +52,7 @@ class Customer {
         return this.id;
     }
     getTransactions() {
-        return this.Transaction;
+        return this.transaction;
     }
     getBalance() {
         let balance = this.getTransactions().reduce((total, transaction) => total + transaction.amount, 0);
@@ -36,8 +62,8 @@ class Customer {
     }
     addTransaction(amount) {
         const transaction = new Transaction(amount);
-        const result = amount <= 0 ? false : this.Transaction.push(transaction);
-        const transactionString = JSON.stringify(this.Transaction);
+        const result = amount <= 0 ? false : this.transaction.push(transaction);
+        const transactionString = JSON.stringify(this.transaction);
         const isDone = result
             ? `\nThe transaction is successful for this amount[ ${amount} ] Added to ${this.name} Account\n${transactionString}\n`
             : `\nThe transaction is Failed for negative amount or Zero[ ${amount} ]\n`;
@@ -49,34 +75,34 @@ exports.Customer = Customer;
 class Branch {
     constructor(nameBranch) {
         this.nameBranch = nameBranch;
-        this.Customers = [];
+        this.customers = [];
     }
     getBranchName() {
         return this.nameBranch;
     }
     getCustomers() {
-        return this.Customers;
+        return this.customers;
     }
     addCustomer(customer) {
         const existingCustomer = this.getCustomers().find((customerI) => customerI.getId() === customer.getId());
         if (!existingCustomer) {
             this.getCustomers().push(customer);
             console.log(`------------------------------------------------------------------`);
-            console.log(this.Customers);
+            console.log(this.customers);
             return true;
         }
         else {
             console.log(`------------------------------------------------------------------`);
-            console.log(this.Customers);
+            console.log(this.customers);
             return false;
         }
     }
     addCustomerTransaction(customerId, amount) {
         const IndexCustomer = this.getCustomers().findIndex((customer) => customer.getId() === customerId);
-        const IndexCustomer0 = this.getCustomers().find((customer) => customer.getId() === customerId);
-        IndexCustomer0 === undefined
+        const findCustomer = this.getCustomers().find((customer) => customer.getId() === customerId);
+        findCustomer === undefined
             ? console.log(`Not Have Any Data To This User By ID: ${customerId}`)
-            : console.log(IndexCustomer0);
+            : console.log(findCustomer);
         if (IndexCustomer === -1) {
             console.log(`Customer with id ${customerId} not found in ${this.nameBranch}`);
             console.log(`------------------------------------------------------------------`);
@@ -93,18 +119,18 @@ exports.Branch = Branch;
 class Bank {
     constructor(nameBank) {
         this.nameBank = nameBank;
-        this.Branches = [];
+        this.branches = [];
     }
     getNameBank() {
         return this.nameBank;
     }
     getBranches() {
-        return this.Branches;
+        return this.branches;
     }
     addBranch(branch) {
         let existedBranch = this.checkBranch(branch);
         if (!existedBranch) {
-            this.Branches.push(branch);
+            this.branches.push(branch);
             console.log(`Branch: ${branch.getBranchName()} Added Successfully`);
             return true;
         }
@@ -135,9 +161,9 @@ class Bank {
         }
     }
     addCustomerTransaction(branch, customerId, amount) {
-        const targetBranch2 = this.findBranchByName(branch.getBranchName());
+        const foundBranch = this.findBranchByName(branch.getBranchName());
         console.log(`------------------------------------------------------------------`);
-        console.log(targetBranch2);
+        console.log(foundBranch);
         const targetBranch = this.checkBranch(branch);
         if (targetBranch) {
             return branch.addCustomerTransaction(customerId, amount)
@@ -146,13 +172,13 @@ class Bank {
         }
     }
     findBranchByName(branchName) {
-        const branch = this.Branches.find((branch) => branch.getBranchName().toLowerCase() === branchName.toLowerCase());
+        const branch = this.branches.find((branch) => branch.getBranchName().toLowerCase() === branchName.toLowerCase());
         return branch
             ? `The Branch :${branch.getBranchName()} Is Founded `
             : `The Branch :${branchName} Is Not Founded`;
     }
     checkBranch(branch) {
-        return this.Branches.includes(branch);
+        return this.branches.includes(branch);
     }
     listCustomers(branch, includeTransactions) {
         if (this.checkBranch(branch)) {
@@ -184,12 +210,13 @@ class Bank {
                     .includes(searchCustomer.toLowerCase()) ||
                     customer.getId().toString().includes(searchCustomer));
             });
+            console.log(`------------------------------------------------------------------`);
             console.log('Search Result: ');
             result.length > 0 ? console.log(result) : console.log(`No Customer Found such [${searchCustomer}] On Branch: [${branch.getBranchName()}]`);
             console.log(`------------------------------------------------------------------`);
         }
         else {
-            console.log(`${branch.getBranchName()} Not Found`);
+            console.log(`${branch.getBranchName()} Not Found This Branch`);
         }
     }
 }
@@ -198,10 +225,10 @@ const arizonaBank = new Bank("Arizona");
 const westBranch = new Branch("West Branch");
 const sunBranch = new Branch("Sun Branch");
 const testBranch = new Branch("test Branch");
-const customer1 = new Customer("John", 1);
-const customer2 = new Customer("Anna", 2);
-const customer3 = new Customer("John", 3);
-const customer4 = new Customer("nada", 7);
+const customer1 = new Customer("John", '678');
+const customer2 = new Customer("Anna", '779');
+const customer3 = new Customer("John", '908');
+const customer4 = new Customer("nada", '8');
 arizonaBank.addBranch(westBranch);
 arizonaBank.addBranch(sunBranch);
 arizonaBank.addBranch(westBranch);
@@ -222,11 +249,10 @@ console.log(arizonaBank.addCustomerTransaction(westBranch, customer1.getId(), 20
 console.log(arizonaBank.addCustomerTransaction(westBranch, customer1.getId(), -2000));
 console.log(arizonaBank.addCustomerTransaction(westBranch, customer2.getId(), 3000));
 console.log(arizonaBank.addCustomerTransaction(westBranch, customer4.getId(), 4000));
-console.log(arizonaBank.searchCustomer(westBranch, 'John'));
-console.log(arizonaBank);
 customer1.addTransaction(0);
 console.log(customer1.getBalance());
 console.log(customer3.getBalance());
 console.log(arizonaBank.listCustomers(westBranch, true));
 console.log(arizonaBank.listCustomers(sunBranch, true));
 console.log(arizonaBank);
+console.log(arizonaBank.searchCustomer(westBranch, 'john'));

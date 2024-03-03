@@ -1,5 +1,34 @@
 import { ICustomer, IBranch, ITransaction, IBank } from "./interface";
 
+// 0- CLASS IDGENERATOR
+class IdGenerator {
+  private usedIds: Set<string> = new Set();
+
+  generateUniqueId(): string {
+    let id: string;
+
+    do {
+      id = this.generateRandomId();
+    } while (this.usedIds.has(id));
+
+    this.usedIds.add(id);
+    return id;
+  }
+
+  private generateRandomId(): string {
+    const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*';
+    const idLength = 10;
+    let randomId = '';
+
+    for (let i = 0; i < idLength; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomId += characters.charAt(randomIndex);
+    }
+
+    return randomId;
+  }
+}
+
 // 1- CLASS TRANSACTION
 class Transaction implements ITransaction {
   amount: number;
@@ -18,11 +47,14 @@ class Transaction implements ITransaction {
 // 2- CLASS CUSTOMER
 class Customer implements ICustomer {
   name: string;
-  id: number;
+  id: string;
+  numberUser:string;
   transaction: Transaction[];
-  constructor(name: string, id: number) {
+  constructor(name: string,id: string) {
+    const idGenerator = new IdGenerator();
     this.name = name;
     this.id = id;
+    this.numberUser = idGenerator.generateUniqueId();
     this.transaction = [];
   }
 
@@ -30,7 +62,7 @@ class Customer implements ICustomer {
     return this.name;
   }
 
-  getId(): number {
+  getId(): string {
     return this.id;
   }
 
@@ -96,7 +128,7 @@ class Branch implements IBranch {
     }
   }
 
-  addCustomerTransaction(customerId: number, amount: number): boolean {
+  addCustomerTransaction(customerId: string, amount: number): boolean {
     const IndexCustomer = this.getCustomers().findIndex(
       (customer) => customer.getId() === customerId
     );
@@ -185,7 +217,7 @@ class Bank implements IBank {
 
   addCustomerTransaction(
     branch: Branch,
-    customerId: number,
+    customerId: string,
     amount: number
   ): string | undefined {
     const foundBranch = this.findBranchByName(branch.getBranchName());
@@ -255,13 +287,16 @@ class Bank implements IBank {
           .includes(searchCustomer.toLowerCase()) ||
           customer.getId().toString().includes(searchCustomer));
       });
+      console.log(
+        `------------------------------------------------------------------`
+      );
       console.log('Search Result: ');
       result.length > 0 ? console.log(result) : console.log(`No Customer Found such [${searchCustomer}] On Branch: [${branch.getBranchName()}]`);
       console.log(
         `------------------------------------------------------------------`
       );
     } else {
-      console.log(`${branch.getBranchName()} Not Found`);
+      console.log(`${branch.getBranchName()} Not Found This Branch`);
     }
   }
 }
@@ -273,10 +308,12 @@ const westBranch = new Branch("West Branch");
 const sunBranch = new Branch("Sun Branch");
 const testBranch = new Branch("test Branch");
 
-const customer1 = new Customer("John", 1);
-const customer2 = new Customer("Anna", 2);
-const customer3 = new Customer("John", 3);
-const customer4 = new Customer("nada", 7);
+
+
+const customer1 = new Customer("John", '678');
+const customer2 = new Customer("Anna", '779');
+const customer3 = new Customer("John", '908');
+const customer4 = new Customer("nada", '8');
 
 arizonaBank.addBranch(westBranch);
 arizonaBank.addBranch(sunBranch);
@@ -303,9 +340,7 @@ console.log(arizonaBank.addCustomerTransaction(westBranch, customer2.getId(), 30
 console.log(
   arizonaBank.addCustomerTransaction(westBranch, customer4.getId(), 4000)
 );
-console.log(arizonaBank.searchCustomer(westBranch,'John'));
 
-console.log(arizonaBank);
 
 customer1.addTransaction(0);
 console.log(customer1.getBalance());
@@ -313,3 +348,5 @@ console.log(customer3.getBalance());
 console.log(arizonaBank.listCustomers(westBranch, true));
 console.log(arizonaBank.listCustomers(sunBranch, true));
 console.log(arizonaBank);
+console.log(arizonaBank.searchCustomer(westBranch,'john'));
+
