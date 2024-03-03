@@ -19,11 +19,11 @@ class Transaction implements ITransaction {
 class Customer implements ICustomer {
   name: string;
   id: number;
-  Transaction: Transaction[];
+  transaction: Transaction[];
   constructor(name: string, id: number) {
     this.name = name;
     this.id = id;
-    this.Transaction = [];
+    this.transaction = [];
   }
 
   getName(): string {
@@ -35,7 +35,7 @@ class Customer implements ICustomer {
   }
 
   getTransactions() {
-    return this.Transaction;
+    return this.transaction;
   }
 
   getBalance() {
@@ -50,8 +50,8 @@ class Customer implements ICustomer {
 
   addTransaction(amount: number) {
     const transaction = new Transaction(amount);
-    const result = amount <= 0 ? false : this.Transaction.push(transaction);
-    const transactionString = JSON.stringify(this.Transaction);
+    const result = amount <= 0 ? false : this.transaction.push(transaction);
+    const transactionString = JSON.stringify(this.transaction);
     const isDone = result
       ? `\nThe transaction is successful for this amount[ ${amount} ] Added to ${this.name} Account\n${transactionString}\n`
       : `\nThe transaction is Failed for negative amount or Zero[ ${amount} ]\n`;
@@ -62,10 +62,10 @@ class Customer implements ICustomer {
 // 3- CLASS BRANCH
 class Branch implements IBranch {
   nameBranch: string;
-  Customers: Customer[];
+  customers: Customer[];
   constructor(nameBranch: string) {
     this.nameBranch = nameBranch;
-    this.Customers = [];
+    this.customers = [];
   }
 
   getBranchName(): string {
@@ -73,7 +73,7 @@ class Branch implements IBranch {
   }
 
   getCustomers(): Customer[] {
-    return this.Customers;
+    return this.customers;
   }
 
   addCustomer(customer: Customer): boolean {
@@ -85,13 +85,13 @@ class Branch implements IBranch {
       console.log(
         `------------------------------------------------------------------`
       );
-      console.log(this.Customers);
+      console.log(this.customers);
       return true;
     } else {
       console.log(
         `------------------------------------------------------------------`
       );
-      console.log(this.Customers);
+      console.log(this.customers);
       return false;
     }
   }
@@ -101,12 +101,12 @@ class Branch implements IBranch {
       (customer) => customer.getId() === customerId
     );
 
-    const IndexCustomer0 = this.getCustomers().find(
+    const findCustomer = this.getCustomers().find(
       (customer) => customer.getId() === customerId
     );
-    IndexCustomer0 === undefined
+    findCustomer === undefined
       ? console.log(`Not Have Any Data To This User By ID: ${customerId}`)
-      : console.log(IndexCustomer0);
+      : console.log(findCustomer);
     if (IndexCustomer === -1) {
       console.log(
         `Customer with id ${customerId} not found in ${this.nameBranch}`
@@ -125,10 +125,10 @@ class Branch implements IBranch {
 // 4- CLASS BANK
 class Bank implements IBank {
   nameBank: string;
-  Branches: Branch[];
+  branches: Branch[];
   constructor(nameBank: string) {
     this.nameBank = nameBank;
-    this.Branches = [];
+    this.branches = [];
   }
 
   getNameBank(): string {
@@ -136,13 +136,13 @@ class Bank implements IBank {
   }
 
   getBranches(): Branch[] {
-    return this.Branches;
+    return this.branches;
   }
 
   addBranch(branch: Branch): boolean {
     let existedBranch = this.checkBranch(branch);
     if (!existedBranch) {
-      this.Branches.push(branch);
+      this.branches.push(branch);
       console.log(`Branch: ${branch.getBranchName()} Added Successfully`);
       return true;
     } else {
@@ -188,11 +188,11 @@ class Bank implements IBank {
     customerId: number,
     amount: number
   ): string | undefined {
-    const targetBranch2 = this.findBranchByName(branch.getBranchName());
+    const foundBranch = this.findBranchByName(branch.getBranchName());
     console.log(
       `------------------------------------------------------------------`
     );
-    console.log(targetBranch2);
+    console.log(foundBranch);
     const targetBranch = this.checkBranch(branch);
     if (targetBranch) {
       return branch.addCustomerTransaction(customerId, amount)
@@ -202,7 +202,7 @@ class Bank implements IBank {
   }
 
   findBranchByName(branchName: string): Branch | string {
-    const branch = this.Branches.find(
+    const branch = this.branches.find(
       (branch) =>
         branch.getBranchName().toLowerCase() === branchName.toLowerCase()
     );
@@ -212,7 +212,7 @@ class Bank implements IBank {
   }
 
   checkBranch(branch: Branch): boolean {
-    return this.Branches.includes(branch);
+    return this.branches.includes(branch);
   }
 
   listCustomers(branch: Branch, includeTransactions: boolean): void {
@@ -303,7 +303,7 @@ console.log(arizonaBank.addCustomerTransaction(westBranch, customer2.getId(), 30
 console.log(
   arizonaBank.addCustomerTransaction(westBranch, customer4.getId(), 4000)
 );
-console.log(arizonaBank.searchCustomer(westBranch,'1'));
+console.log(arizonaBank.searchCustomer(westBranch,'John'));
 
 console.log(arizonaBank);
 

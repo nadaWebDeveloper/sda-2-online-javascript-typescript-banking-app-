@@ -222,7 +222,7 @@ console.log(arizonaBank.addCustomerTransaction(westBranch, customer1.getId(), 20
 console.log(arizonaBank.addCustomerTransaction(westBranch, customer1.getId(), -2000));
 console.log(arizonaBank.addCustomerTransaction(westBranch, customer2.getId(), 3000));
 console.log(arizonaBank.addCustomerTransaction(westBranch, customer4.getId(), 4000));
-console.log(arizonaBank.searchCustomer(westBranch, '1'));
+console.log(arizonaBank.searchCustomer(westBranch, 'John'));
 console.log(arizonaBank);
 customer1.addTransaction(0);
 console.log(customer1.getBalance());

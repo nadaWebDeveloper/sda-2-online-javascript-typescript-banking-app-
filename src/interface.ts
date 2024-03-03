@@ -3,7 +3,7 @@ import { Transaction, Customer, Branch } from "./bank";
 export interface ICustomer {
   name: string;
   id: number;
-  Transaction: Transaction[];
+  transaction: Transaction[];
   getName(): string;
   getId(): number;
   getTransactions(): Transaction[];
@@ -13,7 +13,7 @@ export interface ICustomer {
 // - INTERFACE BRANCH
 export interface IBranch {
   nameBranch: string;
-  Customers: Customer[];
+  customers: Customer[];
   getBranchName(): string;
   getCustomers(): Customer[];
   addCustomer(customer: Customer): boolean;
@@ -27,7 +27,7 @@ export interface ITransaction {
 // - INTERFACE BANK
 export interface IBank {
   nameBank: string;
-  Branches: Branch[];
+  branches: Branch[];
   getNameBank(): string;
   getBranches(): Branch[];
   addBranch(branch: Branch): boolean ;
